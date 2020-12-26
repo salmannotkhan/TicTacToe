@@ -9,7 +9,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:name', function(req, res, next) {
-  res.render('game', {roomid: req.params.name})
+  if (req.params.name == 'ai') {
+    roomid = false
+  }else{
+    roomid = req.params.name
+  }
+  res.render('game', {roomid: roomid})
 })
 
 module.exports = router;

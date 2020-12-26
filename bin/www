@@ -160,6 +160,14 @@ function nextMove(board, inverse, sign) {
 }
 
 io.on('connection', socket => {
+  // Connection
+  socket.on('roomjoin', (id, sign) => {
+    console.log('joined ' + id)
+    socket.join(id)
+    players = io.sockets.in(id).adapter.rooms.get(id).size
+    io.sockets.in(id).emit('roomjoined', id, players)
+  })
+  // AI logic
   socket.on('tick', (board, inverse, sign) => {
     result = checkResult(board, inverse, sign)
     if (result != null) {
@@ -181,5 +189,30 @@ io.on('connection', socket => {
         socket.emit('ai', coord[0], coord[1], 'O')
       }
     }
+  })
+  // Multiplayer Logic
+  socket.on('toserver', (board, inverse, s, id, x, y) => {
+    io.sockets.in(id).emit('toclient', x, y, s)
+    result = checkResult(board, inverse, s)
+    if (result != null) {
+      socket.emit('gameend', result)
+      socket.leave(id)
+    }
+    else{
+      empty = 0
+      for (let i = 0; i < board.length; i++) {
+        if (_.countBy(board[i])['']) {
+          empty += _.countBy(board[i])['']
+        }
+      }
+      if (empty == 0) {
+        socket.emit('gameend', 'none')
+        socket.leave(id)
+      }
+    }
+  })
+  // Disconnect
+  socket.on('disconn', (id) => {
+    socket.leave(id)
   })
 });

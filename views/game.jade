@@ -1,8 +1,10 @@
 extends layout
 
 block content
-  h1 TicTacToe 
-    //a(href="/#{roomid}") #{roomid}
+  h1 
+    a(href="/") TicTacToe 
+    if roomid
+      .roomid Room Id: #{roomid}
     img(onclick="darkMode()", src="images/moon-icon.webp")
   .result
       .text
@@ -18,4 +20,7 @@ block content
       .cell
       .cell
   script(src="/socket.io/socket.io.js")
-  script(src="javascripts/main.js")
+  if roomid
+    script(src="javascripts/multi.js")
+  else
+    script(src="javascripts/main.js")
