@@ -2,7 +2,7 @@ const darkBtn = document.querySelector("h1 > img")
 const result_box = document.querySelector(".result .text")
 const cells = document.querySelectorAll(".cell")
 const box = document.querySelector(".box")
-const socket = io('https://hypnotic-able-dirigible.glitch.me');
+const socket = io('https://tictactoething.glitch.me');
 
 socket.on('gameend', data => {
     result_box.parentElement.style.display = "flex"

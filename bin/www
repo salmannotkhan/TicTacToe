@@ -148,7 +148,7 @@ function nextMove(board, inverse, sign) {
     return [cross_set.indexOf(''), cross_set.indexOf('')]
   }
   else if (colCount == 2 && another_cross_set.indexOf('') != -1) {
-    return [2 - another_cross_set.indexOf(''), another_cross_set.indexOf('')]
+    return [another_cross_set.indexOf(''), 2 - another_cross_set.indexOf('')]
   }
 
   for (let i = 0; i < board.length; i++) {
