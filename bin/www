@@ -1,0 +1,185 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('tictactoe:server');
+var http = require('http');
+var _ = require('lodash');
+const { clear, count } = require('console');
+const { countBy } = require('lodash');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+});
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+function checkResult(board, inverse, sign) {
+  console.log('Checking')
+  cross_set = []
+  another_cross_set = []
+  for (let i = 0; i < board.length; i++) {
+      rowCount = _.countBy(board[i])[sign]
+      colCount = _.countBy(inverse[i])[sign]
+      cross_set.push(board[i][i])
+      another_cross_set.push(board[i][2 - i])
+      if (rowCount == 3) {
+          return sign
+      }
+      else if (colCount == 3) {
+          return sign
+      }
+  }
+  rowCount = _.countBy(cross_set)[sign]
+  colCount = _.countBy(another_cross_set)[sign]
+  if (rowCount == 3) {
+      return sign
+  }
+  else if (colCount == 3) {
+      return sign
+  }
+}
+
+function nextMove(board, inverse, sign) {
+  console.log('AI time')
+  cross_set = []
+  another_cross_set = []
+  for (let i = 0; i < board.length; i++) {
+    rowCount = _.countBy(board[i])[sign]
+    colCount = _.countBy(inverse[i])[sign]
+    cross_set.push(board[i][i])
+    another_cross_set.push(board[i][2 - i])  
+    if (rowCount == 2 && board[i].indexOf('') != -1) {
+      return [i, board[i].indexOf('')]
+    }
+    else if (colCount == 2 && inverse[i].indexOf('') != -1) {
+      console.log('second ' + i)
+      console.log(board)
+      console.log(inverse[i].indexOf(''))
+      return [inverse[i].indexOf(''), i]
+    }
+  }
+  rowCount = _.countBy(cross_set)[sign]
+  colCount = _.countBy(another_cross_set)[sign]
+  if (rowCount == 2 && cross_set.indexOf('') != -1) {
+    return [cross_set.indexOf(''), cross_set.indexOf('')]
+  }
+  else if (colCount == 2 && another_cross_set.indexOf('') != -1) {
+    return [2 - another_cross_set.indexOf(''), another_cross_set.indexOf('')]
+  }
+
+  for (let i = 0; i < board.length; i++) {
+    if (board[i].indexOf('') != -1){
+      console.log('third')
+      return [i, board[i].indexOf('')]
+    }
+  }
+}
+
+io.on('connection', socket => {
+  socket.on('tick', (board, inverse, sign) => {
+    result = checkResult(board, inverse, sign)
+    if (result != null) {
+      socket.emit('gameend', result)
+    }
+    else{
+      empty = 0
+      for (let i = 0; i < board.length; i++) {
+        if (_.countBy(board[i])['']) {
+          empty += _.countBy(board[i])['']
+        }
+      }
+      if (empty == 0) {
+        socket.emit('gameend', 'none')
+      }
+      else if(sign != 'O') {
+        coord = nextMove(board, inverse, sign)
+        console.log(coord)
+        socket.emit('ai', coord[0], coord[1], 'O')
+      }
+    }
+  })
+});

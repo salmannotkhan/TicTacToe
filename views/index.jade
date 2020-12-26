@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1 TicTacToe
+    img(onclick="darkMode()", src="images/moon-icon.webp")
+  center
+    a(href=roomid) Start New Game
+    br
+    br
+    center OR
+    br
+    input(type="text", name="roomid", placeholder="Enter Your Room ID")
+    br
+    br
+    button(onclick="window.location.href='/' + document.querySelector('input').value") Join Existing
+    script(src="socket.io/socket.io.js")
+    script(src="javascripts/main.js")

@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  color: var(--font-color);
+}
+
+h1 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 img {
+  height: 25px;
+  width: 25px;
+}
+
+body {
+  --bg-color: white;
+  --shadow-color: darkgray;
+  --font-color: black;
+  background-color: var(--bg-color);
+}
+
+body.dark {
+  --bg-color: black;
+  --shadow-color: darkslategray;
+  --font-color: white;
+}
+
+body.dark h1 img {
+  -webkit-filter: invert(1);
+          filter: invert(1);
+}
+
+.result, .box {
+  background-color: var(--bg-color) !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  border-radius: 5px;
+}
+
+.result {
+  display: none;
+  padding: 20px 50px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: white;
+  -webkit-box-shadow: 5px 5px 5px var(--shadow-color);
+          box-shadow: 5px 5px 5px var(--shadow-color);
+  z-index: 10;
+}
+
+.result button {
+  margin: 25px 0;
+  padding: 5px 0;
+  background-color: var(--bg-color);
+  border: 1px solid var(--shadow-color);
+}
+
+.box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  width: 300px;
+}
+
+.box .cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: 1px solid var(--font-color);
+  font-size: 70px;
+  height: 100px;
+  width: 100px;
+}
+
+.box.finished {
+  pointer-events: none;
+  -webkit-filter: blur(5px);
+          filter: blur(5px);
+}
+/*# sourceMappingURL=main.css.map */

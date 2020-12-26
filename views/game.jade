@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 TicTacToe 
+    //a(href="/#{roomid}") #{roomid}
+    img(onclick="darkMode()", src="images/moon-icon.webp")
+  .result
+      .text
+      button(onclick='window.location.reload(false)') Play Again
+  .box
+      .cell
+      .cell
+      .cell
+      .cell
+      .cell
+      .cell
+      .cell
+      .cell
+      .cell
+  script(src="/socket.io/socket.io.js")
+  script(src="javascripts/main.js")
