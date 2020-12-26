@@ -18,6 +18,7 @@ socket.on('gameend', data => {
 
 socket.on('ai', (x, y, aiSign) => {
     tick(x, y, aiSign)
+    box.classList.remove('finished')
 });
 
 board = [['', '', ''], ['', '', ''], ['', '', '']]
@@ -57,6 +58,7 @@ for (let i = 0; i < cells.length; i++) {
             xCord = Math.floor(i/3)
             yCord = i % 3
             tick(xCord, yCord, sign)
+            box.classList.add('finished')
         }
     })
 }
